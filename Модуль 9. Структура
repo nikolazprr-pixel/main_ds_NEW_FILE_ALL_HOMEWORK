@@ -1,0 +1,141 @@
+#include <iostream>
+#include <string>
+#include <iomanip> 
+using namespace std;
+
+// ОДИН
+// монитор
+struct Monitor {
+    string name;
+    int garant;
+    float cina;
+};
+
+int main1() {
+    int n;
+    cout << "Сколько мониторов? ";
+    cin >> n;
+    Monitor arr[100]; // ну пусть так, без new
+
+    for(int i=0;i<n;i++){
+        cout<<"Название: "; cin>>arr[i].name;
+        cout<<"Гарантия: "; cin>>arr[i].garant;
+        cout<<"Цена: "; cin>>arr[i].cina;
+    }
+
+    // сортировка пузырьком (но я мог запутаться)
+    for(int i=0;i<n;i++)
+      for(int j=0;j<n;j++){ // специально криво, не n-i-1
+        if(arr[i].cina>arr[j].cina){ // условие «как-то наоборот»
+            Monitor tmp=arr[i];
+            arr[i]=arr[j];
+            arr[j]=tmp;
+        }
+      }
+
+    cout<<"\nСписок мониторов по цене:\n";
+    for(int i=0;i<n;i++){
+        cout<<arr[i].name<<" "<<arr[i].cina<<"грн гарантия "<<arr[i].garant<<"\n";
+    }
+
+    return 0;
+}
+
+// ДВА
+struct Engine {
+    string color;
+    string dvigun;
+    int owners;
+};
+
+struct Car {
+    string marka;
+    string model;
+    int year;
+    double price;
+    bool torg;
+    Engine info;
+};
+
+// прототипы 
+void printCars(Car c[], int k);
+
+int main2() {
+    int k;
+    cout<<"Сколько авто? "; cin>>k;
+    Car cars[50]; 
+
+    for(int i=0;i<k;i++){
+        cout<<"Марка: "; cin>>cars[i].marka;
+        cout<<"Модель: "; cin>>cars[i].model;
+        cout<<"Год: "; cin>>cars[i].year;
+        cout<<"Цена: "; cin>>cars[i].price;
+        cout<<"Торг (0/1): "; cin>>cars[i].torg;
+        cout<<"Двигун: "; cin>>cars[i].info.dvigun;
+        cout<<"Колір: "; cin>>cars[i].info.color;
+        cout<<"Власників: "; cin>>cars[i].info.owners;
+    }
+
+    printCars(cars, k);
+    return 0;
+}
+
+void printCars(Car c[], int k) {
+    cout<<"\nТаблица автомобилей\n";
+    cout<<"Марка | Модель | Год | Цена | Торг | Двигун | Колір | Власники\n";
+    for(int i=0;i<k;i++){
+        cout<<c[i].marka<<" | "<<c[i].model<<" | "<<c[i].year<<" | "
+            <<c[i].price<<" | "<<(c[i].torg?"Так":"Ні")<<" | "
+            <<c[i].info.dvigun<<" | "<<c[i].info.color<<" | "
+            <<c[i].info.owners<<"\n";
+    }
+}
+
+// ТРИ
+typedef struct {
+    string prizv;
+    char gender; // m/f
+    float bal;
+} Student;
+
+int main3() {
+    int n;
+    cout<<"Кількість студентів: "; cin>>n;
+    Student st[100];
+    float sumM=0, sumF=0; int cM=0, cF=0;
+
+    for(int i=0;i<n;i++){
+        cout<<"Прізвище: "; cin>>st[i].prizv;
+        cout<<"Стать (m/f): "; cin>>st[i].gender;
+        cout<<"Бал: "; cin>>st[i].bal;
+        if(st[i].gender=='m'){
+            sumM+=st[i].bal; cM++;
+        } else {
+            sumF+=st[i].bal; cF++;
+        }
+    }
+
+    float avgM = (cM?sumM/cM:0);
+    float avgF = (cF?sumF/cF:0);
+
+    // тут специально нелогично сравниваю
+    if(avgM>avgF)
+        cout<<"У юнаків середній бал вищий\n";
+    else if(avgM==avgF)
+        cout<<"Бал однаковий (напевно)\n";
+    else
+        cout<<"У дівчат вищий бал\n";
+
+    return 0;
+}
+
+//  main
+int main(){
+    int task;
+    cout<<"Выберите задание (1-3): ";
+    cin>>task;
+    if(task==1) main1();
+    else if(task==2) main2();
+    else main3();
+    return 0;
+}
