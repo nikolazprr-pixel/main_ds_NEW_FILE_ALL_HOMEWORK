@@ -1,0 +1,122 @@
+#include <iostream>
+#include <cstring> 
+#include <cctype>  
+#include <cstdlib> 
+
+using namespace std;
+
+//  версия strcmp
+int mystrcmp (const char * str1, const char * str2) {
+    int i = 0;        
+    while (str1[i] != '\0' && str2[i] != '\0') {
+        if (str1[i] != str2[i]) {
+            if (str1[i] > str2[i]) {
+                return 1; // ну типа больше
+            } else {
+                return -1; // меньше
+            }
+        }
+        i++;
+    }
+    // проверка 
+    if (str1[i] == '\0' && str2[i] == '\0') return 0;
+    if (str1[i] == '\0') return -1;
+    return 1;
+}
+
+// строка в число
+int StringToNumber( char * str) {
+    int result_of_function_calculation = 0;
+    int i=0;
+    // тут может быть минус
+    int sign = 1;
+    if (str[0] == '-') {
+        sign = -1;
+        i++;
+    }
+    while (str[i] != '\0') {
+        // if (str[i]<'0' || str[i]>'9') cout<<"DEBUG: not number\n";
+        result_of_function_calculation = result_of_function_calculation * 10 + (str[i] - '0');
+        i++;
+    }
+    return result_of_function_calculation * sign;
+}
+
+// число в строку
+char * NumberToString ( int number) {
+    static char buffer[50]; // можно было бы new, но лень
+    int idx = 0;
+    bool neg=false;
+    if (number==0) {
+        buffer[0]='0'; buffer[1]='\0';
+        return buffer;
+    }
+    if (number<0) {neg=true; number*=-1;}
+    while (number>0) {
+        int d=number%10;
+        buffer[idx++] = char('0'+d);
+        number/=10;
+    }
+    if (neg) buffer[idx++]='-';
+    buffer[idx]='\0';
+    // перевернем
+    for (int i=0; i<idx/2; i++) {
+        char tmp = buffer[i];
+        buffer[i]=buffer[idx-1-i];
+        buffer[idx-1-i]=tmp;
+    }
+    return buffer;
+}
+
+// верхний 
+char * Uppercase (char * str1) {
+    for (int i=0; str1[i]!='\0'; i++) {
+        str1[i] = toupper(str1[i]);
+    }
+    return str1;
+}
+
+// нижний 
+char * Lowercase (char * str1) {
+    int cntt=0;
+    while (str1[cntt]) {
+        str1[cntt] = tolower(str1[cntt]);
+        cntt++;
+    }
+    return str1;
+}
+
+// ревоорс
+char * mystrrev (char * str) {
+    int len = strlen(str);
+    char * newstr = new char[len+1]; 
+    for (int i=0; i<len; i++) {
+        newstr[i] = str[len-1-i];
+    }
+    newstr[len]='\0';
+    return newstr;
+}
+
+
+// я проверяю
+int main() {
+    char s1[]="hello";
+    char s2[]="Hello";
+    cout<<"strcmp: "<<mystrcmp(s1,s2)<<endl;
+
+    char numstr[]="-12345";
+    cout<<"StringToNumber: "<<StringToNumber(numstr)<<endl;
+
+    cout<<"NumberToString: "<<NumberToString(9876)<<endl;
+
+    cout<<"Uppercase: "<<Uppercase(s1)<<endl;
+    cout<<"Lowercase: "<<Lowercase(s2)<<endl;
+
+    char txt[]="world";
+    char * rev = mystrrev(txt);
+    cout<<"Reversed: "<<rev<<endl;
+
+    delete [] rev; // осв память p.c это мой коментарий а не гпт
+
+    return 0;
+}
