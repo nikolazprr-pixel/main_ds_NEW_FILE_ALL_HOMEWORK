@@ -1,0 +1,144 @@
+#include <iostream>
+#include <string>
+#include <cstring>
+using namespace std;
+
+// тут делаю union для номера
+union Number {
+    int num;      // если просто цифры
+    char word[9]; // до 8 символов
+};
+
+// структура Машина
+struct Car {
+    string color;
+    string model;
+    bool isNum; // 1 если цифры, 0 если слово
+    Number number;
+};
+
+// функции (прототипы)
+void fillCar(Car &c);
+void printCar(Car c);
+void editCar(Car &c);
+void printAll(Car arr[], int n);
+int searchCar(Car arr[], int n, string s); // ищем по строке
+
+// ==== функции ====
+void fillCar(Car &c){
+    cout<<"Введите цвет: ";
+    cin>>c.color;
+    cout<<"Введите модель: ";
+    cin>>c.model;
+
+    int choice=0;
+    cout<<"Номер как число(1) или слово(2)? ";
+    cin>>choice;
+    if(choice==1){
+        c.isNum=true;
+        cout<<"Введите номер (число): ";
+        cin>>c.number.num;
+    } else {
+        c.isNum=false;
+        cout<<"Введите номер (слово до 8): ";
+        cin>>c.number.word;
+    }
+}
+
+void printCar(Car c){
+    cout<<"Машина: "<<c.model<<" цвет "<<c.color<<" номер ";
+    if(c.isNum){
+        cout<<c.number.num;
+    } else {
+        cout<<c.number.word;
+    }
+    cout<<endl;
+}
+
+void editCar(Car &c){
+    cout<<"Редактируем машину "<<c.model<<endl;
+    cout<<"Новый цвет: "; cin>>c.color;
+    cout<<"Новая модель: "; cin>>c.model;
+    int ch;
+    cout<<"Изменить номер (1-да,0-нет): ";
+    cin>>ch;
+    if(ch==1){
+        if(c.isNum){
+            cout<<"Введите новый номер (число): "; cin>>c.number.num;
+        } else {
+            cout<<"Введите новый номер (слово): "; cin>>c.number.word;
+        }
+    }
+}
+
+void printAll(Car arr[], int n){
+    for(int i=0;i<n;i++){
+        cout<<i+1<<") ";
+        printCar(arr[i]);
+    }
+}
+
+// поищем по строке (но если цифра, то приведем через to_string)
+int searchCar(Car arr[], int n, string s){
+    for(int i=0;i<n;i++){
+        if(arr[i].isNum){
+            string tmp = to_string(arr[i].number.num);
+            if(tmp==s) return i;
+        } else {
+            if(strcmp(arr[i].number.word,s.c_str())==0) return i;
+        }
+    }
+    return -1; // не нашли
+}
+
+// ==== main ====
+int main(){
+    Car cars[10];
+    int n=0;
+
+    int menu=0;
+    do {
+        cout<<"\nМеню:\n1-Добавить машину\n2-Вывести все\n3-Редактировать\n4-Поиск\n0-Выход\nВаш выбор: ";
+        cin>>menu;
+
+        if(menu==1){
+            if(n<10){
+                fillCar(cars[n]);
+                n++;
+            } else {
+                cout<<"Места нет"<<endl;
+            }
+        }
+        else if(menu==2){
+            printAll(cars,n);
+        }
+        else if(menu==3){
+            int idx;
+            cout<<"Введите индекс машины (1.."<<n<<"): ";
+            cin>>idx;
+            if(idx>0 && idx<=n){
+                editCar(cars[idx-1]);
+            } else {
+                cout<<"Нет такой машины"<<endl;
+            }
+        }
+        else if(menu==4){
+            string s;
+            cout<<"Введите номер для поиска: ";
+            cin>>s;
+            int pos = searchCar(cars,n,s);
+            if(pos!=-1){
+                cout<<"Найдена машина:"<<endl;
+                printCar(cars[pos]);
+            } else {
+                cout<<"Машина не найдена"<<endl;
+            }
+        }
+
+    } while(menu!=0);
+
+    return 0;
+}
+
+
+#я не придумал как сделать задание про живую сущность я жутко тупой скучаю по пайтону
