@@ -1,0 +1,137 @@
+#include <iostream>
+using namespace std;
+
+
+
+int main() {
+    int M, N;
+    cout << "Введите M: ";
+    cin >> M;
+    cout << "Введите N: ";
+    cin >> N;
+
+    int *A = new int[M];
+    int *B = new int[N];
+
+    cout << "Введите массив A: ";
+    for (int i = 0; i < M; i++) {
+        cin >> A[i];
+    }
+
+    cout << "Введите массив B: ";
+    for (int j = 0; j < N; j++) {
+        cin >> B[j];
+    }
+
+    // 1
+    // Элементы A, которых нет в B (без повторов)
+    int *C = new int[M]; // максимум размер M, потом обрежем
+    int cntt = 0;
+
+    for (int i = 0; i < M; i++) {
+        bool found = false;
+        for (int j = 0; j < N; j++) {
+            if (A[i] == B[j]) {
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            // проверка на повтор
+            bool duplicate = false;
+            for (int k = 0; k < cntt; k++) {
+                if (C[k] == A[i]) {
+                    duplicate = true;
+                    break;
+                }
+            }
+            if (!duplicate) {
+                C[cntt] = A[i];
+                cntt++;
+            }
+        }
+    }
+
+    cout << "\nЗадание 1. Результат: ";
+    for (int i = 0; i < cntt; i++) {
+        cout << C[i] << " ";
+    }
+    cout << endl;
+
+
+    // 2
+    // элементы уникальные для каждого массива
+    int *D = new int[M+N]; // запас
+    int reslt = 0;
+
+    for (int i = 0; i < M; i++) {
+        bool inB = false;
+        for (int j = 0; j < N; j++) {
+            if (A[i] == B[j]) {
+                inB = true;
+                break;
+            }
+        }
+        if (!inB) {
+            bool dup = false;
+            for (int z = 0; z < reslt; z++) {
+                if (D[z] == A[i]) dup = true;
+            }
+            if (!dup) {
+                D[reslt++] = A[i];
+            }
+        }
+    }
+
+    for (int j = 0; j < N; j++) {
+        bool inA = false;
+        for (int i = 0; i < M; i++) {
+            if (B[j] == A[i]) {
+                inA = true;
+                break;
+            }
+        }
+        if (!inA) {
+            bool dup2 = false;
+            for (int k = 0; k < reslt; k++) {
+                if (D[k] == B[j]) dup2 = true;
+            }
+            if (!dup2) {
+                D[reslt++] = B[j];
+            }
+        }
+    }
+
+    cout << "\nЗадание 2. Результат: ";
+    for (int i = 0; i < reslt; i++) {
+        cout << D[i] << " ";
+    }
+    cout << endl;
+
+
+    // 3
+    // объединяем оба массива
+    int *E = new int[M+N]; 
+    int sizeE = 0;
+
+    for (int i = 0; i < M; i++) {
+        E[sizeE++] = A[i];
+    }
+    for (int j = 0; j < N; j++) {
+        E[sizeE++] = B[j];
+    }
+
+    cout << "\nЗадание 3. Результат: ";
+    for (int i = 0; i < sizeE; i++) {
+        cout << E[i] << " ";
+    }
+    cout << endl;
+
+    // delete []A; // потом освобождение памяти йоууу
+    // delete []B;
+    // delete []C;
+    // delete []D;
+    // delete []E;
+
+    return 0;
+}
